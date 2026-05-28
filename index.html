@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>송강건 | 에듀테크 교수설계자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF6EF;--cream-2:#F3EBDD;--ink:#3A332B;--ink-soft:#6B6157;
+    --terra:#C2683E;--terra-deep:#A4502B;--sage:#8AA188;--sage-deep:#5F7A5D;
+    --line:rgba(58,51,43,.12);--shadow:0 14px 40px -18px rgba(58,51,43,.35);
+    --card:#FAF6EF;--card-2:#F3EBDD;--badge-bg:rgba(250,246,239,.92);
+    --serif:'Gowun Batang', serif;--sans:'Gowun Dodum', sans-serif;--mono:'JetBrains Mono', monospace;
+  }
+  [data-theme="dark"]{
+    --cream:#211D18;--cream-2:#2A2520;--ink:#F0EAE0;--ink-soft:#B8AFA2;
+    --terra:#E08A5B;--terra-deep:#D5754180;--sage:#9DB39A;--sage-deep:#A9C0A6;
+    --line:rgba(240,234,224,.14);--shadow:0 14px 40px -18px rgba(0,0,0,.6);
+    --card:#2A2520;--card-2:#322C26;--badge-bg:rgba(42,37,32,.92);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .5s,color .5s}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
+  section{padding:120px 0;position:relative}
+  h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.3}
+  .eyebrow{font-family:var(--sans);font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;color:var(--terra);margin-bottom:18px;display:block}
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--terra),var(--sage));z-index:60;transition:width .1s}
+
+  /* intro loader */
+  #intro{position:fixed;inset:0;z-index:200;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .7s,visibility .7s}
+  #intro.done{opacity:0;visibility:hidden}
+  #intro .ich{font-family:var(--serif);font-size:5rem;font-weight:700;color:var(--terra);animation:introPulse 1.6s ease-in-out infinite}
+  #intro .iname{font-size:.85rem;letter-spacing:.4em;color:var(--ink-soft);text-transform:uppercase}
+  @keyframes introPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.12);opacity:1}}
+
+  .bg-field{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .fblob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.4}
+  [data-theme="dark"] .fblob{opacity:.22}
+  .fblob.x1{width:480px;height:480px;background:radial-gradient(circle,#E9C9A8,transparent 70%);top:5%;left:-10%;animation:float1 22s ease-in-out infinite}
+  .fblob.x2{width:420px;height:420px;background:radial-gradient(circle,#C7D6C2,transparent 70%);top:45%;right:-12%;animation:float2 26s ease-in-out infinite}
+  .fblob.x3{width:360px;height:360px;background:radial-gradient(circle,#E3B79A,transparent 70%);top:78%;left:20%;animation:float3 30s ease-in-out infinite}
+  @keyframes float1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.1)}66%{transform:translate(-40px,40px) scale(.95)}}
+  @keyframes float2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-90px,-50px) scale(1.15)}}
+  @keyframes float3{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(60px,-70px) scale(1.05)}80%{transform:translate(-50px,30px) scale(.9)}}
+
+  /* spotlight following mouse */
+  #spotlight{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(194,104,62,.1),transparent 65%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);transition:opacity .4s;opacity:0}
+  [data-theme="dark"] #spotlight{background:radial-gradient(circle,rgba(224,138,91,.12),transparent 65%)}
+
+  .geo{position:fixed;z-index:1;pointer-events:none;opacity:.5}
+  [data-theme="dark"] .geo{opacity:.32}
+  .g1{top:18%;right:12%;animation:spin 40s linear infinite}
+  .g2{top:60%;left:8%;animation:spin 30s linear infinite reverse}
+  .g3{top:88%;right:18%;animation:bob 9s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:20px 32px;background:var(--cream);background:color-mix(in srgb,var(--cream) 80%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s,background .5s}
+  nav.scrolled{border-bottom-color:var(--line)}
+  nav .logo{font-family:var(--serif);font-weight:700;font-size:1.15rem;letter-spacing:.04em}
+  nav .right{display:flex;align-items:center;gap:24px}
+  nav .links{display:flex;gap:30px}
+  nav .links a{color:var(--ink-soft);text-decoration:none;font-size:.92rem;position:relative;transition:color .25s}
+  nav .links a:hover,nav .links a.active{color:var(--terra)}
+  nav .links a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1.5px;background:var(--terra);transition:width .25s}
+  nav .links a:hover::after,nav .links a.active::after{width:100%}
+  @media(max-width:640px){nav .links{display:none}}
+  .theme-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:transform .3s,border-color .25s}
+  .theme-btn:hover{transform:rotate(25deg) scale(1.1);border-color:var(--terra)}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding-top:80px}
+  #particles{position:absolute;inset:0;z-index:1}
+  .hero-tag{display:inline-block;font-size:.85rem;letter-spacing:.2em;color:var(--sage-deep);border:1px solid var(--sage);padding:7px 18px;border-radius:30px;margin-bottom:30px;background:color-mix(in srgb,var(--sage) 10%,transparent);opacity:0;animation:fadeUp .8s .2s forwards}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.4rem);letter-spacing:-.01em;margin-bottom:8px}
+  .hero h1 .char{display:inline-block;opacity:0;transform:translateY(40px) rotate(6deg);animation:charIn .7s forwards cubic-bezier(.2,.8,.2,1)}
+  @keyframes charIn{to{opacity:1;transform:none}}
+  .hero h1 .accent{color:var(--terra);position:relative;display:inline-block}
+  .hero h1 .accent::after{content:'';position:absolute;left:0;bottom:6px;width:100%;height:12px;background:color-mix(in srgb,var(--terra) 22%,transparent);z-index:-1;border-radius:3px;transform:scaleX(0);transform-origin:left;animation:underline 1s 1.4s forwards cubic-bezier(.2,.8,.2,1)}
+  @keyframes underline{to{transform:scaleX(1)}}
+  @keyframes fadeUp{to{opacity:1;transform:none}}
+  .hero .lead{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.6rem);color:var(--ink-soft);max-width:620px;margin:24px 0 30px;line-height:1.7;opacity:0;animation:fadeUp .8s 1.5s forwards}
+  .codeline{font-family:var(--mono);font-size:.92rem;color:var(--sage-deep);background:color-mix(in srgb,var(--sage) 10%,transparent);border:1px solid var(--line);border-radius:8px;padding:12px 18px;margin-bottom:34px;display:inline-block;min-height:46px;opacity:0;animation:fadeUp .8s 1.7s forwards}
+  .codeline .pk{color:var(--terra)}
+  .codeline .cursor-blink{display:inline-block;width:8px;background:var(--terra);animation:blink 1s steps(2) infinite;margin-left:2px}
+  @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+  .hero .cta{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s 1.9s forwards}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:14px 30px;border-radius:34px;text-decoration:none;font-size:.95rem;transition:transform .22s,box-shadow .22s;position:relative;overflow:hidden;cursor:pointer;border:none;font-family:inherit}
+  .btn.primary{background:var(--terra);color:#fff;box-shadow:var(--shadow)}
+  .btn.primary::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-100%)}
+  .btn.primary:hover{transform:translateY(-3px)}
+  .btn.primary:hover::before{transform:translateX(100%);transition:transform .7s}
+  .btn.ghost{border:1px solid var(--line);color:var(--ink);background:transparent}
+  .btn.ghost:hover{border-color:var(--terra);color:var(--terra);transform:translateY(-3px)}
+  .scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);color:var(--ink-soft);font-size:.78rem;letter-spacing:.2em;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .scroll-hint .dot{width:1px;height:34px;background:linear-gradient(var(--terra),transparent);animation:drop 1.8s infinite}
+  @keyframes drop{0%{opacity:0;transform:scaleY(.3)}50%{opacity:1}100%{opacity:0;transform:scaleY(1)}}
+
+  .head{margin-bottom:60px;max-width:680px}
+  .head h2{font-size:clamp(1.9rem,4vw,2.7rem);margin-bottom:14px}
+  .head p{color:var(--ink-soft);font-size:1.05rem}
+
+  .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
+  @media(max-width:780px){.about-grid{grid-template-columns:1fr;gap:40px}}
+  .portrait{aspect-ratio:3/4;border-radius:18px;position:relative;overflow:hidden;background:linear-gradient(160deg,#E9D3BC,#C7D6C2);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center}
+  [data-theme="dark"] .portrait{background:linear-gradient(160deg,#4A3F33,#3A4438)}
+  .portrait .ring{position:absolute;width:78%;height:78%;border:1.5px dashed rgba(58,51,43,.25);border-radius:50%;animation:spin 24s linear infinite}
+  [data-theme="dark"] .portrait .ring{border-color:rgba(240,234,224,.3)}
+  .portrait .ring::before{content:'';position:absolute;top:-5px;left:50%;width:9px;height:9px;border-radius:50%;background:var(--terra);transform:translateX(-50%)}
+  .portrait .ch{font-family:var(--serif);font-size:7rem;color:rgba(58,51,43,.28);font-weight:700;position:relative;z-index:2}
+  [data-theme="dark"] .portrait .ch{color:rgba(240,234,224,.32)}
+  .portrait .badge{position:absolute;bottom:18px;left:18px;right:18px;background:var(--badge-bg);border-radius:12px;padding:14px 18px;font-size:.86rem;color:var(--ink-soft);backdrop-filter:blur(4px);z-index:3}
+  .about-body p{margin-bottom:22px;font-size:1.08rem}
+  .about-body p .hl{color:var(--terra-deep);font-weight:700}
+  [data-theme="dark"] .about-body p .hl{color:var(--terra)}
+  .creed{border-left:3px solid var(--sage);padding:6px 0 6px 22px;font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--ink-soft);margin-top:8px}
+
+  /* timeline */
+  #journey{background:var(--cream-2);position:relative;z-index:2;transition:background .5s}
+  .tl{position:relative;max-width:760px;margin:0 auto;padding-left:8px}
+  .tl::before{content:'';position:absolute;left:14px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--terra),var(--sage))}
+  .tl-item{position:relative;padding:0 0 44px 52px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item .node{position:absolute;left:6px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--cream-2);border:3px solid var(--terra);z-index:2;transition:transform .3s,background .3s}
+  .tl-item:hover .node{transform:scale(1.3);background:var(--terra)}
+  .tl-item .yr{font-family:var(--mono);font-size:.82rem;color:var(--terra);margin-bottom:4px;letter-spacing:.05em}
+  .tl-item h3{font-size:1.2rem;margin-bottom:6px}
+  .tl-item p{color:var(--ink-soft);font-size:.98rem}
+
+  #skills{position:relative;z-index:2}
+  .skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+  @media(max-width:680px){.skill-grid{grid-template-columns:1fr}}
+  .skill-card{background:var(--card);border-radius:16px;padding:32px 30px;border:1px solid var(--line);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,background .5s;position:relative;overflow:hidden}
+  .skill-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--terra),var(--sage));transform:scaleX(0);transform-origin:left;transition:transform .35s}
+  .skill-card:hover{transform:translateY(-8px) scale(1.015);box-shadow:var(--shadow)}
+  .skill-card:hover::before{transform:scaleX(1)}
+  .skill-card .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;background:color-mix(in srgb,var(--terra) 12%,transparent);transition:transform .3s}
+  .skill-card:hover .ic{transform:scale(1.15) rotate(-6deg)}
+  .skill-card h3{font-size:1.3rem;margin-bottom:10px}
+  .skill-card p{color:var(--ink-soft);font-size:.98rem;margin-bottom:18px}
+  .bar{height:6px;background:color-mix(in srgb,var(--ink) 8%,transparent);border-radius:6px;overflow:hidden;margin-bottom:8px}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--terra),var(--terra-deep));border-radius:6px;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}
+  .bar-label{display:flex;justify-content:space-between;font-size:.76rem;color:var(--ink-soft);margin-bottom:16px;font-family:var(--mono)}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-size:.78rem;padding:5px 12px;border-radius:20px;background:color-mix(in srgb,var(--sage) 16%,transparent);color:var(--sage-deep);transition:transform .2s}
+  .tag:hover{transform:translateY(-2px)}
+
+  #skills{background:var(--cream-2);transition:background .5s}
+  .proj{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);margin-bottom:36px;transition:transform .15s ease-out,background .5s;transform-style:preserve-3d}
+  @media(max-width:780px){.proj{grid-template-columns:1fr}}
+  .proj-visual{background:linear-gradient(150deg,#C2683E,#A4502B);padding:46px 40px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;position:relative;overflow:hidden}
+  .proj-visual::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,70%) var(--my,30%),rgba(255,255,255,.2),transparent 50%)}
+  .proj-visual .kic{font-size:2rem;margin-bottom:auto;position:relative}
+  .proj-visual h3{color:#fff;font-size:1.55rem;line-height:1.4;margin-bottom:8px;position:relative}
+  .proj-visual .ptag{font-size:.82rem;opacity:.85;letter-spacing:.05em;position:relative}
+  .proj-body{padding:40px}
+  .proj-body .summary{color:var(--ink-soft);margin-bottom:26px;font-size:1rem}
+  .stats{display:flex;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+  .stat{flex:1;min-width:90px}
+  .stat .num{font-family:var(--serif);font-weight:700;font-size:1.7rem;color:var(--terra-deep);line-height:1}
+  [data-theme="dark"] .stat .num{color:var(--terra)}
+  .stat .lbl{font-size:.78rem;color:var(--ink-soft);margin-top:6px}
+  .proj-link{display:inline-flex;align-items:center;gap:8px;color:var(--terra);text-decoration:none;font-size:.95rem;transition:gap .2s}
+  .proj-link:hover{gap:14px}
+  .proj.upcoming{box-shadow:none;background:transparent;border-style:dashed}
+  .proj.upcoming .proj-full{grid-column:1/-1;padding:46px;text-align:center;color:var(--ink-soft)}
+  .proj.upcoming h3{font-size:1.2rem;color:var(--ink);margin-bottom:8px}
+
+  #contact{background:var(--ink);color:var(--cream);text-align:center;overflow:hidden;z-index:2;transition:background .5s}
+  [data-theme="dark"] #contact{background:#15120F}
+  #contact::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(194,104,62,.18),transparent 40%),radial-gradient(circle at 80% 70%,rgba(138,161,136,.14),transparent 40%)}
+  #contact h2{color:var(--cream);font-size:clamp(2rem,5vw,3rem);margin-bottom:18px}
+  [data-theme="dark"] #contact h2{color:var(--ink)}
+  #contact .sub{color:color-mix(in srgb,var(--cream) 70%,transparent);max-width:520px;margin:0 auto 44px;font-size:1.08rem}
+  [data-theme="dark"] #contact .sub{color:var(--ink-soft)}
+  .contact-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+  .contact-card{background:rgba(250,246,239,.06);border:1px solid rgba(250,246,239,.14);border-radius:14px;padding:22px 30px;min-width:200px;text-decoration:none;color:var(--cream);transition:background .25s,transform .25s}
+  [data-theme="dark"] .contact-card{color:var(--ink)}
+  .contact-card:hover{background:rgba(194,104,62,.2);transform:translateY(-6px)}
+  .contact-card .ct-lbl{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px}
+  .contact-card .ct-val{font-size:1.02rem}
+  footer{padding:40px 0;text-align:center;color:color-mix(in srgb,var(--cream) 45%,transparent);font-size:.85rem;position:relative;z-index:2}
+  [data-theme="dark"] footer{color:var(--ink-soft)}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="intro"><div class="ich">宋</div><div class="iname">Song Gang Geon</div></div>
+<div id="progress"></div>
+<div id="spotlight"></div>
+<div class="bg-field"><div class="fblob x1"></div><div class="fblob x2"></div><div class="fblob x3"></div></div>
+<div class="geo g1" data-par="0.15"><svg width="70" height="70" viewBox="0 0 70 70"><polygon points="35,4 66,60 4,60" fill="none" stroke="#C2683E" stroke-width="1.5"/></svg></div>
+<div class="geo g2" data-par="0.25"><svg width="54" height="54" viewBox="0 0 54 54"><rect x="6" y="6" width="42" height="42" rx="6" fill="none" stroke="#8AA188" stroke-width="1.5"/></svg></div>
+<div class="geo g3" data-par="0.2"><svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" stroke="#C2683E" stroke-width="1.5" stroke-dasharray="5 6"/></svg></div>
+
+<nav id="nav">
+  <div class="logo">송강건<span style="color:var(--terra)">.</span></div>
+  <div class="right">
+    <div class="links"><a href="#about">소개</a><a href="#journey">여정</a><a href="#skills">역량</a><a href="#projects">프로젝트</a><a href="#contact">연락</a></div>
+    <button class="theme-btn" id="themeBtn" aria-label="테마 전환">☀️</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="particles"></canvas>
+  <div class="wrap">
+    <span class="hero-tag">EdTech Instructional Designer</span>
+    <h1 id="line1"></h1>
+    <h1 id="line2"></h1>
+    <p class="lead">학습자의 막막함을 짧고 몰입감 있는 배움으로 바꾸는 에듀테크 교수설계자입니다.</p>
+    <div class="codeline"><span class="pk">const</span> designer = { data, fullstack, motion, <span id="type-target"></span><span class="cursor-blink">&nbsp;</span> }</div>
+    <div class="cta"><a href="#projects" class="btn primary">프로젝트 보기 →</a><a href="#" class="btn ghost" id="resumeBtn">📄 이력서 다운로드</a></div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="dot"></div></div>
+</header>
+
+<section id="about"><div class="wrap"><div class="about-grid">
+  <div class="reveal portrait"><div class="ring"></div><div class="ch">宋</div><div class="badge">송강건 · 경영학 학사 → 시스템 트레이딩 석사</div></div>
+  <div class="about-body reveal">
+    <span class="eyebrow">About</span>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:24px">배움을 설계하는 사람</h2>
+    <p>경영학을 전공하고 대학원에서 <span class="hl">시스템 트레이딩과 데이터 분석</span>을 공부하며, 감(感)이 아니라 데이터로 판단하는 사고방식을 익혔습니다. 이는 교수설계의 출발점인 '요구분석'과 같은 결을 가집니다.</p>
+    <p>웹 개발을 직접 익히고 동료를 가르치는 <span class="hl">코딩 튜터</span> 경험을 통해, 지식을 학습자의 눈높이로 구조화하는 일에 매력을 느꼈습니다.</p>
+    <p>지금은 <span class="hl">AI 도구를 교수설계 파트너로 삼아</span> 짧고 효과적인 마이크로러닝을 만드는 일에 집중하고 있습니다.</p>
+    <p class="creed">"하루하루 성실히, 매 순간 최선을 다한다."</p>
+  </div>
+</div></div></section>
+
+<section id="journey"><div class="wrap">
+  <div class="head reveal"><span class="eyebrow">Journey</span><h2>경계를 넘어온 여정</h2><p>서로 다른 분야의 경험이 교수설계라는 하나의 길로 모였습니다.</p></div>
+  <div class="tl">
+    <div class="tl-item reveal"><div class="node"></div><div class="yr">STEP 01</div><h3>경영학 학사</h3><p>비즈니스의 언어와 문제 정의 능력을 익혔습니다. 모든 교육 설계의 출발점이 되는 '왜'를 묻는 훈련의 시작.</p></div>
+    <div class="tl-item reveal"><div class="node"></div><div class="yr">STEP 02</div><h3>대학원 · 시스템 트레이딩 석사</h3><p>DataGuide로 대규모 데이터를 직접 다루며, 감이 아닌 수치로 판단하는 사고방식을 체득했습니다.</p></div>
+    <div class="tl-item reveal"><div class="node"></div><div class="yr">STEP 03</div><h3>풀스택 개발 학습 · 코딩 튜터</h3><p>웹 개발을 익히고 동료를 가르치며, 지식을 학습자 눈높이로 구조화하는 교수설계의 핵심 역량을 경험했습니다.</p></div>
+    <div class="tl-item reveal"><div class="node"></div><div class="yr">NOW</div><h3>AI 활용 에듀테크 교수설계자</h3><p>데이터·개발·영상 역량을 융합해, AI 도구를 파트너 삼아 짧고 효과적인 마이크로러닝을 설계합니다.</p></div>
+  </div>
+</div></section>
+
+<section id="skills"><div class="wrap">
+  <div class="head reveal"><span class="eyebrow">Skills</span><h2>네 갈래의 역량, 하나의 설계</h2><p>서로 다른 영역의 경험이 교수설계라는 하나의 일에서 만납니다.</p></div>
+  <div class="skill-grid">
+    <div class="skill-card reveal"><div class="ic">📐</div><h3>교수설계 (ID)</h3><p>ADDIE·ARCS·Bloom's Taxonomy 등 학습 이론을 실제 콘텐츠 설계에 적용합니다.</p><div class="bar-label"><span>Instructional Design</span><span class="pct" data-v="90">0%</span></div><div class="bar"><span data-w="90"></span></div><div class="tags"><span class="tag">마이크로러닝</span><span class="tag">스토리보드</span><span class="tag">요구분석</span></div></div>
+    <div class="skill-card reveal"><div class="ic">📊</div><h3>데이터 분석</h3><p>대학원 연구에서 대규모 데이터를 직접 다루며 정량적 근거로 의사결정하는 법을 익혔습니다.</p><div class="bar-label"><span>Data Analysis</span><span class="pct" data-v="80">0%</span></div><div class="bar"><span data-w="80"></span></div><div class="tags"><span class="tag">DataGuide</span><span class="tag">통계 분석</span><span class="tag">Excel VBA</span></div></div>
+    <div class="skill-card reveal"><div class="ic">💻</div><h3>풀스택 이해</h3><p>웹 개발 경험으로 LMS·플랫폼 구조를 이해해, 개발팀과 막힘없이 소통합니다.</p><div class="bar-label"><span>Full-stack Dev</span><span class="pct" data-v="75">0%</span></div><div class="bar"><span data-w="75"></span></div><div class="tags"><span class="tag">HTML·CSS·JS</span><span class="tag">Java·Spring</span><span class="tag">코딩 튜터</span></div></div>
+    <div class="skill-card reveal"><div class="ic">🎬</div><h3>영상·AI 제작</h3><p>3D·모션그래픽과 생성형 AI 도구로 몰입형 학습 콘텐츠를 직접 기획·제작합니다.</p><div class="bar-label"><span>Motion & AI</span><span class="pct" data-v="85">0%</span></div><div class="bar"><span data-w="85"></span></div><div class="tags"><span class="tag">After Effects</span><span class="tag">Cinema 4D</span><span class="tag">생성형 AI</span></div></div>
+  </div>
+</div></section>
+
+<section id="projects"><div class="wrap">
+  <div class="head reveal"><span class="eyebrow">Projects</span><h2>설계한 배움들</h2><p>학습 문제를 정의하고, 짧고 효과적인 콘텐츠로 풀어낸 작업들입니다.</p></div>
+  <article class="proj reveal" data-tilt>
+    <div class="proj-visual"><div class="kic">✍️</div><div><h3>주니어 마케터를 위한<br>ChatGPT 광고 카피라이팅</h3><div class="ptag">5분 마이크로러닝 · AI 활용 교수설계</div></div></div>
+    <div class="proj-body"><p class="summary">"카피 한 줄에 30분"이라는 주니어 마케터의 막막함을, T-U-T 공식 하나로 5분 만에 푸는 마이크로러닝. 기획부터 영상·평가까지 AI 도구 7종을 교수설계 파트너로 활용했습니다.</p>
+      <div class="stats"><div class="stat"><div class="num"><span class="count" data-to="74">0</span>%↓</div><div class="lbl">제작 시간</div></div><div class="stat"><div class="num"><span class="count" data-to="80">0</span>%↓</div><div class="lbl">제작 비용</div></div><div class="stat"><div class="num"><span class="count" data-to="8">0</span>씬</div><div class="lbl">ARCS 설계</div></div></div>
+      <a class="proj-link" href="https://hexagonal-pruner-2f8.notion.site/AI-ChatGPT-5-36bfe3d9731d8073a24cd82711915473" target="_blank" rel="noopener">자세히 보기 (Notion) →</a></div>
+  </article>
+  <article class="proj upcoming reveal"><div class="proj-full"><h3>다음 프로젝트를 준비하고 있습니다</h3><p>데이터 기반 학습효과 측정, 3D 몰입형 콘텐츠 등 새로운 설계 작업이 이곳에 더해질 예정입니다.</p></div></article>
+</div></section>
+
+<section id="contact"><div class="wrap"><div class="reveal">
+  <span class="eyebrow" style="color:var(--terra)">Contact</span>
+  <h2>함께 배움을 설계할까요?</h2>
+  <p class="sub">에듀테크 교수설계, 마이크로러닝 콘텐츠, AI 활용 교육에 대한 이야기를 환영합니다.</p>
+  <div class="contact-row">
+    <a class="contact-card" href="mailto:[이메일 주소]"><div class="ct-lbl">Email</div><div class="ct-val">[이메일 주소]</div></a>
+    <a class="contact-card" href="tel:[전화번호]"><div class="ct-lbl">Phone</div><div class="ct-val">[전화번호]</div></a>
+    <a class="contact-card" href="[링크드인 URL]" target="_blank" rel="noopener"><div class="ct-lbl">LinkedIn</div><div class="ct-val">프로필 보기</div></a>
+  </div>
+</div></div><footer>© 2026 송강건 · 에듀테크 교수설계자</footer></section>
+
+<script>
+const prog=document.getElementById('progress'),nav=document.getElementById('nav');
+/* intro loader */
+addEventListener('load',()=>setTimeout(()=>document.getElementById('intro').classList.add('done'),1400));
+/* theme toggle */
+const themeBtn=document.getElementById('themeBtn'),root=document.documentElement;
+themeBtn.addEventListener('click',()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');themeBtn.textContent=d?'🌙':'☀️'});
+/* resume download (generates a simple text resume on the fly) */
+document.getElementById('resumeBtn').addEventListener('click',e=>{
+  e.preventDefault();
+  const txt=`송강건 (SONG GANG GEON)\n에듀테크 교수설계자 (EdTech Instructional Designer)\n\n■ 학력\n- 경영학 학사\n- 대학원 시스템 트레이딩 전공 (석사)\n\n■ 핵심 역량\n- 교수설계: ADDIE, ARCS, Bloom's Taxonomy 기반 마이크로러닝 설계\n- 데이터 분석: DataGuide, 통계 분석, Excel VBA 자동화\n- 풀스택 이해: HTML/CSS/JS, Java, Spring Boot\n- 영상/AI 제작: After Effects, Cinema 4D, 생성형 AI 도구\n\n■ 대표 프로젝트\n- 주니어 마케터를 위한 ChatGPT 광고 카피라이팅 (5분 마이크로러닝)\n  AI 도구 7종 활용 / 8씬 ARCS 설계 / 제작시간·비용 대폭 절감\n\n■ 연락처\n- Email: [이메일 주소]\n- Phone: [전화번호]\n- LinkedIn: [링크드인 URL]\n\n"하루하루 성실히, 매 순간 최선을 다한다."`;
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='송강건_이력서.txt';a.click();URL.revokeObjectURL(a.href);
+});
+/* hero title chars */
+function splitChars(el,txt,sd){[...txt].forEach((c,i)=>{const s=document.createElement('span');s.className='char';if(c==='설'||c==='계')s.classList.add('accent');s.textContent=c===' '?'\u00A0':c;s.style.animationDelay=(sd+i*.05)+'s';el.appendChild(s)})}
+splitChars(document.getElementById('line1'),'가르침을 설계합니다',.3);
+splitChars(document.getElementById('line2'),'데이터와 영상으로.',.9);
+/* parallax + scroll spy */
+const geos=[...document.querySelectorAll('[data-par]')];
+const secs=[...document.querySelectorAll('section[id]')];const navlinks=[...document.querySelectorAll('nav .links a')];
+addEventListener('scroll',()=>{const h=document.documentElement,y=h.scrollTop;prog.style.width=(y/(h.scrollHeight-h.clientHeight)*100)+'%';nav.classList.toggle('scrolled',scrollY>40);geos.forEach(g=>g.style.transform=`translateY(${y*g.dataset.par}px)`);
+  let cur='';secs.forEach(s=>{if(y>=s.offsetTop-200)cur=s.id});navlinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+/* spotlight */
+const sp=document.getElementById('spotlight');
+addEventListener('mousemove',e=>{sp.style.opacity='1';sp.style.left=e.clientX+'px';sp.style.top=e.clientY+'px'});
+/* typing */
+const words=['ai_tools','microlearning','storyboard'];let wi=0,ci=0,del=false;const tt=document.getElementById('type-target');
+(function type(){const w=words[wi];tt.textContent=del?w.slice(0,ci--):w.slice(0,ci++);if(!del&&ci>w.length){del=true;setTimeout(type,1100);return}if(del&&ci<0){del=false;wi=(wi+1)%words.length;ci=0}setTimeout(type,del?45:90)})();
+/* tilt */
+function tilt(el,max){el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${px*max}deg) rotateX(${-py*max}deg)`;el.style.setProperty('--mx',(px*100+50)+'%');el.style.setProperty('--my',(py*100+50)+'%')});el.addEventListener('mouseleave',()=>el.style.transform='')}
+document.querySelectorAll('[data-tilt]').forEach(el=>tilt(el,4));
+/* reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');e.target.querySelectorAll('.bar span').forEach(b=>b.style.width=b.dataset.w+'%');e.target.querySelectorAll('.pct').forEach(p=>{let v=0,t=+p.dataset.v;const i=setInterval(()=>{v++;p.textContent=v+'%';if(v>=t)clearInterval(i)},14)});e.target.querySelectorAll('.count').forEach(c=>{let v=0,t=+c.dataset.to;const st=Math.max(1,Math.round(t/30));const i=setInterval(()=>{v+=st;if(v>=t){v=t;clearInterval(i)}c.textContent=v},22)});io.unobserve(e.target)})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*.08)+'s';io.observe(el)});
+/* particles */
+const cv=document.getElementById('particles'),cx=cv.getContext('2d');let W,H,parts,mouse={x:-999,y:-999};
+function init(){parts=[];const n=Math.min(60,Math.floor(W/24));for(let i=0;i<n;i++)parts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1})}
+function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;init()}
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
+cv.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999});
+function draw(){cx.clearRect(0,0,W,H);const dk=root.getAttribute('data-theme')==='dark';for(let i=0;i<parts.length;i++){const p=parts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const mdx=p.x-mouse.x,mdy=p.y-mouse.y,md=Math.hypot(mdx,mdy);if(md<130){p.x+=mdx/md*1.6;p.y+=mdy/md*1.6}cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fillStyle=dk?'rgba(224,138,91,.55)':'rgba(194,104,62,.5)';cx.fill();for(let j=i+1;j<parts.length;j++){const q=parts[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<115){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(${dk?'157,179,154':'138,161,136'},${.2*(1-d/115)})`;cx.lineWidth=1;cx.stroke()}}}requestAnimationFrame(draw)}
+resize();addEventListener('resize',resize);draw();
+</script>
+</body>
+</html>
